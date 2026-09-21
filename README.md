@@ -2,6 +2,10 @@
 **ASTRA** ->  Autonomous Scientific Telescope Reasoning Architecture
 
 
+ASTRA is a digital-twin-based autonomous observatory intelligence platform that continuously perceives telescope, environmental, and scientific data, detects anomalies and data-quality issues, dynamically replans observations, and uses tool-augmented multi-agent AI to provide explainable technical and scientific decision support.
+
+---
+
                     ASTRONOMER
                         │
                         ▼
