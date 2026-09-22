@@ -1,40 +1,47 @@
-version: "3.9"
-
 services:
+
   postgres:
-    image: postgres:16-alpine
+    image: postgres:16
+    container_name: astra-postgres
     restart: unless-stopped
+
     environment:
-      POSTGRES_DB: ${POSTGRES_DB:-astra}
-      POSTGRES_USER: ${POSTGRES_USER:-astra}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-changeme}
+      POSTGRES_DB: astra
+      POSTGRES_USER: astra
+      POSTGRES_PASSWORD: astra
+
     ports:
       - "5432:5432"
+
     volumes:
       - postgres_data:/var/lib/postgresql/data
-      - ./database/postgres:/docker-entrypoint-initdb.d
+
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U astra -d astra"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
 
   questdb:
-    image: questdb/questdb:latest
+    image: questdb/questdb:9.1.1
+    container_name: astra-questdb
     restart: unless-stopped
-    ports:
-      - "9000:9000"   # HTTP / UI
-      - "9009:9009"   # InfluxDB line protocol
-      - "8812:8812"   # PostgreSQL wire
-    volumes:
-      - questdb_data:/root/.questdb
 
-  api:
-    build:
-      context: .
-      dockerfile: infrastructure/docker/Dockerfile.api
-    restart: unless-stopped
-    env_file: .env
     ports:
-      - "8000:8000"
-    depends_on:
-      - postgres
-      - questdb
+      - "9000:9000"
+      - "8812:8812"
+      - "9009:9009"
+
+    volumes:
+      - questdb_data:/var/lib/questdb
+
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q --spider http://localhost:9000/status || exit 1"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
 
 volumes:
   postgres_data:
