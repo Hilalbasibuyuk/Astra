@@ -1,0 +1,104 @@
+# =========================
+# Python & Packaging
+# =========================
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyd
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+eggs/
+parts/
+var/
+sdist/
+develop-eggs/
+.installed.cfg
+lib/
+lib64/
+
+# =========================
+# Environments
+# =========================
+.venv/
+venv/
+env/
+.env/
+ENV/
+env.bak/
+venv.bak/
+
+# =========================
+# Environment Variables
+# =========================
+.env
+.env.local
+.env.development
+.env.test
+.env.production
+# Not: .env.example Git'te OLMALIDIR, bu yüzden buraya eklemiyoruz.
+
+# =========================
+# Testing & Coverage
+# =========================
+.pytest_cache/
+.coverage
+.coverage.*
+coverage.xml
+htmlcov/
+.tox/
+nosetests.xml
+
+# =========================
+# Type Checking & Linting
+# =========================
+.mypy_cache/
+.ruff_cache/
+.pyre/
+.pytype/
+
+# =========================
+# Jupyter / Data Science
+# =========================
+.ipynb_checkpoints/
+profile_default/
+ipython_config.py
+
+# =========================
+# IDE & Editors
+# =========================
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.spyderproject
+.spyproject
+
+# =========================
+# OS Generated Files
+# =========================
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+ehthumbs_vista.db
+Thumbs.db
+Desktop.ini
+
+# =========================
+# Logs
+# =========================
+*.log
+logs/
+
+# =========================
+# Docker Volumes & Databases
+# =========================
+postgres_data/
+questdb_data/
+*.sqlite3
