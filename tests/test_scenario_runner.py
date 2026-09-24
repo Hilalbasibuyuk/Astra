@@ -1,11 +1,12 @@
 import asyncio
 
 from services.telemetry.runner import TelemetryRunner
+from simulation.scenarios.models import ScenarioType
+from simulation.scenarios.telescope import TelescopeScenarioEngine
 from simulation.telescope.simulator import TelescopeSimulator
 
 
 class FakeTelemetryService:
-
     def __init__(self):
         self.received = []
 
@@ -13,20 +14,27 @@ class FakeTelemetryService:
         self.received.append(telemetry)
 
 
-def test_telemetry_runner_generates_samples():
-
-    simulator = TelescopeSimulator("RUNNER-TCS-01")
+def test_runner_applies_scenario():
+    simulator = TelescopeSimulator(
+        "SCENARIO-RUNNER-TCS"
+    )
 
     service = FakeTelemetryService()
+
+    scenario_engine = TelescopeScenarioEngine()
+
+    scenario_engine.start(
+        ScenarioType.TELESCOPE_MOTOR_OVERHEATING
+    )
 
     runner = TelemetryRunner(
         simulator=simulator,
         telemetry_service=service,
         interval=0.01,
+        scenario_engine=scenario_engine,
     )
 
     async def run_test():
-
         task = asyncio.create_task(
             runner.run()
         )
@@ -42,6 +50,11 @@ def test_telemetry_runner_generates_samples():
     assert len(service.received) > 0
 
     assert all(
-        telemetry.telescope_id == "RUNNER-TCS-01"
+        telemetry.status == "WARNING"
+        for telemetry in service.received
+    )
+
+    assert all(
+        telemetry.motor_temperature > 31.0
         for telemetry in service.received
     )

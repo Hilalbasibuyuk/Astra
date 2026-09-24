@@ -72,3 +72,21 @@ class TelemetryService:
             motor_temperature=telemetry.motor_temperature,
             status=telemetry.status,
         )
+
+    def ingest(self, telemetry) -> None:
+        if isinstance(telemetry, TelescopeTelemetry):
+            self.ingest_telescope(telemetry)
+
+        elif isinstance(telemetry, CameraTelemetry):
+            self.ingest_camera(telemetry)
+
+        elif isinstance(telemetry, WeatherTelemetry):
+            self.ingest_weather(telemetry)
+
+        elif isinstance(telemetry, DomeTelemetry):
+            self.ingest_dome(telemetry)
+
+        else:
+            raise ValueError(
+                f"Unsupported telemetry type: {type(telemetry).__name__}"
+            )
