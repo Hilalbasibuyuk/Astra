@@ -65,3 +65,18 @@ def test_camera_scenario_stop():
     )
 
     assert result.status == telemetry.status
+
+def test_camera_overheating_is_gradual():
+    engine = CameraScenarioEngine()
+
+    engine.start(
+        ScenarioType.CAMERA_OVERHEATING
+    )
+
+    simulator = CameraSimulator()
+
+    first = engine.apply(simulator.step())
+    second = engine.apply(simulator.step())
+
+    assert second.sensor_temperature > first.sensor_temperature
+    assert second.status == "WARNING"

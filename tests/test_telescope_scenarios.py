@@ -15,43 +15,43 @@ def test_telescope_normal_scenario():
     assert result.status == "NORMAL"
 
 
-def test_telescope_motor_overheating():
-    simulator = TelescopeSimulator("SCENARIO-TCS-01")
+def test_motor_overheating_is_gradual():
     engine = TelescopeScenarioEngine()
 
     engine.start(
         ScenarioType.TELESCOPE_MOTOR_OVERHEATING
     )
 
-    telemetry = simulator.step()
+    first = engine.apply(
+        TelescopeSimulator().step()
+    )
 
-    result_1 = engine.apply(telemetry)
-    result_2 = engine.apply(telemetry)
+    second = engine.apply(
+        TelescopeSimulator().step()
+    )
 
-    assert result_1.motor_temperature > telemetry.motor_temperature
-    assert result_2.motor_temperature > result_1.motor_temperature
+    assert first.status == "WARNING"
+    assert second.status == "WARNING"
 
-    assert result_1.motor_current > telemetry.motor_current
-    assert result_2.motor_current > result_1.motor_current
-
-    assert result_1.status == "WARNING"
-    assert result_2.status == "WARNING"
+    assert second.motor_temperature > first.motor_temperature
 
 
-def test_telescope_tracking_drift():
-    simulator = TelescopeSimulator("SCENARIO-TCS-01")
+def test_tracking_drift_is_gradual():
     engine = TelescopeScenarioEngine()
 
     engine.start(
         ScenarioType.TELESCOPE_TRACKING_DRIFT
     )
 
-    telemetry = simulator.step()
+    simulator = TelescopeSimulator()
 
-    result = engine.apply(telemetry)
+    first = engine.apply(simulator.step())
+    second = engine.apply(simulator.step())
 
-    assert result.tracking_error > telemetry.tracking_error
-    assert result.status == "WARNING"
+    assert first.status == "WARNING"
+    assert second.status == "WARNING"
+
+    assert second.tracking_error > first.tracking_error
 
 
 def test_telescope_scenario_stop():

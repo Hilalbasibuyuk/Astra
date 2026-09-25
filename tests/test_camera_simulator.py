@@ -1,5 +1,5 @@
 from simulation.camera.simulator import CameraSimulator
-
+from simulation.scenarios.camera import CameraScenarioEngine
 
 def test_camera_simulator_generates_valid_telemetry():
     simulator = CameraSimulator("TEST-CCD-01")
@@ -45,3 +45,4 @@ def test_camera_simulator_preserves_state():
     assert first.timestamp <= second.timestamp
 
     assert first.camera_id == second.camera_id
+    

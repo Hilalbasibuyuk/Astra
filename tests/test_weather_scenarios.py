@@ -40,3 +40,19 @@ def test_weather_scenario_stop():
     assert result.wind_speed == telemetry.wind_speed
     assert result.cloud_cover == telemetry.cloud_cover
     assert result.status == telemetry.status
+
+def test_weather_deterioration_is_gradual():
+    engine = WeatherScenarioEngine()
+
+    engine.start(
+        ScenarioType.WEATHER_DETERIORATION
+    )
+
+    simulator = WeatherSimulator()
+
+    first = engine.apply(simulator.step())
+    second = engine.apply(simulator.step())
+
+    assert second.wind_speed > first.wind_speed
+    assert second.cloud_cover > first.cloud_cover
+    assert second.seeing > first.seeing

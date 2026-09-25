@@ -55,3 +55,20 @@ def test_dome_scenario_stop():
     )
 
     assert result.status == telemetry.status
+
+def test_dome_motor_anomaly_is_oscillatory():
+    engine = DomeScenarioEngine()
+
+    engine.start(
+        ScenarioType.DOME_MOTOR_ANOMALY
+    )
+
+    simulator = DomeSimulator()
+
+    first = engine.apply(simulator.step())
+    second = engine.apply(simulator.step())
+
+    assert first.status == "WARNING"
+    assert second.status == "WARNING"
+
+    assert first.motor_temperature != second.motor_temperature

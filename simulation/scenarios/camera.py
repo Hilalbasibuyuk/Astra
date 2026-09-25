@@ -1,11 +1,17 @@
+from simulation.anomalies.injector import AnomalyInjector
+from simulation.anomalies.profiles import (
+    CAMERA_OVERHEATING,
+    CAMERA_QUALITY_DEGRADATION,
+)
 from simulation.scenarios.models import ScenarioType
 from simulation.scenarios.state import ScenarioState
 from services.telemetry.models import CameraTelemetry
-
+from simulation.anomalies.models import AnomalyProfile
 
 class CameraScenarioEngine:
     def __init__(self):
         self.state = ScenarioState()
+        self.injector = AnomalyInjector()
 
     def start(self, scenario: ScenarioType) -> None:
         if scenario not in {
@@ -35,12 +41,15 @@ class CameraScenarioEngine:
             self.state.scenario
             == ScenarioType.CAMERA_OVERHEATING
         ):
+            temperature = self.injector.apply(
+                telemetry.sensor_temperature,
+                step,
+                CAMERA_OVERHEATING,
+            )
+
             return telemetry.model_copy(
                 update={
-                    "sensor_temperature": (
-                        telemetry.sensor_temperature
-                        + 1.5 * step
-                    ),
+                    "sensor_temperature": temperature,
                     "status": "WARNING",
                 }
             )
@@ -49,11 +58,13 @@ class CameraScenarioEngine:
             self.state.scenario
             == ScenarioType.CAMERA_QUALITY_DEGRADATION
         ):
-            quality = max(
-                0.0,
-                telemetry.image_quality
-                - 0.05 * step,
+            quality = self.injector.apply(
+                telemetry.image_quality,
+                step,
+                CAMERA_QUALITY_DEGRADATION,
             )
+
+            quality = max(0.0, quality)
 
             return telemetry.model_copy(
                 update={
