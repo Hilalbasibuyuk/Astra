@@ -13,7 +13,7 @@ class EmbeddingService:
 
     @property
     def dimension(self) -> int:
-        return self.model.get_sentence_embedding_dimension()
+        return self.model.get_embedding_dimension()
 
     def embed_documents(self, texts: list[str]) -> list[list[float]]:
         if not texts:
