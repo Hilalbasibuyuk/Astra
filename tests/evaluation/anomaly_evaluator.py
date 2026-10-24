@@ -9,8 +9,6 @@ from services.anomaly_detection.detectors import (
 from services.anomaly_detection.evaluation import (
     evaluate_predictions,
 )
-from simulation.anomalies.injector import AnomalyInjector
-
 from simulation.anomalies.models import AnomalyPattern, AnomalyProfile
 from simulation.anomalies.injector import AnomalyInjector
 from simulation.anomalies.profiles import (
@@ -71,11 +69,39 @@ def build_gradual_drift_scenario() -> tuple[list[float], list[bool]]:
     return values, labels
 
 
+def calculate_detection_delay(
+    labels: list[bool],
+    predictions: list[bool],
+) -> int | None:
+    """Return samples between anomaly onset and first detection.
+
+    Returns None when no anomaly exists or the anomaly is never detected.
+    Assumes one contiguous anomaly interval.
+    """
+    if len(labels) != len(predictions):
+        raise ValueError(
+            "labels and predictions must have the same length"
+        )
+
+    try:
+        anomaly_start = labels.index(True)
+    except ValueError:
+        # There is no ground-truth anomaly in this scenario.
+        return None
+
+    for index in range(anomaly_start, len(labels)):
+        if labels[index] and predictions[index]:
+            return index - anomaly_start
+
+    # The anomaly interval was never detected.
+    return None
+
+
 
 def evaluate_scenario(
     values: list[float],
     labels: list[bool],
-) -> dict[str, dict[str, int | float]]:
+) -> dict[str, dict[str, int | float | None]]:
     detectors = {
         "zscore": ZScoreDetector(threshold=3.0),
         "rolling_zscore": RollingZScoreDetector(
@@ -84,16 +110,20 @@ def evaluate_scenario(
         ),
     }
 
-    results: dict[str, dict[str, int | float]] = {}
+    results: dict[str, dict[str, int | float | None]] = {}
 
     for name, detector in detectors.items():
         predictions = detector.detect(values)
         metrics = evaluate_predictions(labels, predictions)
-        results[name] = asdict(metrics)
+
+        detector_result = asdict(metrics)
+        detector_result["detection_delay_samples"] = (
+            calculate_detection_delay(labels, predictions)
+        )
+
+        results[name] = detector_result
 
     return results
-
-
 
 
 
