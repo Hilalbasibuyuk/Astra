@@ -214,3 +214,37 @@ def test_diagnostics_returns_503_when_rag_llm_is_unavailable(app):
         "The RAG explanation service is unavailable."
     )
     assert len(rag_service.calls) == 1
+
+def test_diagnostics_detects_anomaly_with_real_detector_and_calls_rag(app):
+    rag_service = FakeRAGService()
+
+    # Override telemetry and RAG only.
+    # The real AnomalyDetectionService will be used.
+    app.dependency_overrides[get_telemetry_query_service] = (
+        lambda: FakeTelemetryService(
+            make_rows(latest_tracking_error=8.0)
+        )
+    )
+    app.dependency_overrides[get_rag_answer_service] = (
+        lambda: rag_service
+    )
+
+    with TestClient(app) as client:
+        response = client.post(
+            "/api/v1/diagnostics/analyze",
+            json={"telescope_id": "telescope-01"},
+        )
+
+    assert response.status_code == 200
+
+    body = response.json()
+
+    assert body["is_anomalous"] is True
+    assert body["latest_telemetry"]["tracking_error"] == 8.0
+    assert any(
+        item["metric"] == "tracking_error"
+        for item in body["anomalies"]
+    )
+    assert body["explanation"] is not None
+    assert body["sources"][0]["source_id"] == "S1"
+    assert len(rag_service.calls) == 1
