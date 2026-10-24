@@ -36,6 +36,7 @@ def test_motor_overheating_is_gradual():
     assert second.motor_temperature > first.motor_temperature
 
 
+
 def test_tracking_drift_is_gradual():
     engine = TelescopeScenarioEngine()
 
@@ -44,14 +45,16 @@ def test_tracking_drift_is_gradual():
     )
 
     simulator = TelescopeSimulator()
+    telemetry = simulator.step()
 
-    first = engine.apply(simulator.step())
-    second = engine.apply(simulator.step())
+    first = engine.apply(telemetry)
+    second = engine.apply(telemetry)
 
     assert first.status == "WARNING"
     assert second.status == "WARNING"
 
     assert second.tracking_error > first.tracking_error
+
 
 
 def test_telescope_scenario_stop():

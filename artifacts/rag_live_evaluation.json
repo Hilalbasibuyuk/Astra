@@ -1,0 +1,126 @@
+{
+  "evaluated_at": "2026-10-22T18:59:09.419665+00:00",
+  "api_url": "http://127.0.0.1:8000/rag/answer",
+  "top_k": 5,
+  "evaluation_type": "live_http_end_to_end",
+  "case_count": 3,
+  "successful_count": 3,
+  "error_count": 0,
+  "summary": {
+    "mean_latency_ms": 9453.84,
+    "median_latency_ms": 6765.53,
+    "mean_retrieval_recall_at_k": 1.0,
+    "mean_citation_validity": 1.0,
+    "abstention_expectations_met": 3,
+    "abstention_cases_evaluated": 1
+  },
+  "results": [
+    {
+      "id": "telescope_tracking",
+      "query": "What can cause a telescope tracking error?",
+      "latency_ms": 17684.47,
+      "answer": "A sustained increase in tracking error can be caused by mechanical friction or increased resistance in the drive system, motor current or temperature rising above its usual operating range, incorrect tracking parameters or calibration, encoder or position-feedback problems, communication delays between the control system and the telescope, or wind or other environmental disturbances. [S1]",
+      "result_count": 5,
+      "expected_source_paths": [
+        "telescope/tracking_and_motor.md"
+      ],
+      "retrieved_source_paths": [
+        "camera/camera_operations.md",
+        "telescope/tracking_and_motor.md",
+        "weather/observation_conditions.md"
+      ],
+      "cited_source_paths": [
+        "telescope/tracking_and_motor.md"
+      ],
+      "retrieval_recall_at_k": 1.0,
+      "cited_source_ids": [
+        "S1"
+      ],
+      "valid_source_ids": [
+        "S1"
+      ],
+      "invalid_source_ids": [],
+      "citation_validity": 1.0,
+      "citation_coverage": 0.2,
+      "has_citations": true,
+      "abstention_expected": false,
+      "abstention_detected_by_heuristic": false,
+      "abstention_expectation_met": true
+    },
+    {
+      "id": "weather_camera_image_quality",
+      "query": "How can weather conditions and camera temperature affect image quality?",
+      "latency_ms": 6765.53,
+      "answer": "Weather conditions and camera temperature can significantly affect image quality. Weather conditions, such as atmospheric seeing and turbulence, cloud cover, and transparency, can degrade image sharpness and resolution [S1]. Camera temperature and detector noise are also critical factors. When the camera's sensor temperature increases, it can lead to higher image noise and a risk of saturation [S4]. Additionally, changes in exposure time and gain can influence image brightness and noise characteristics, which should be inspected when image quality changes unexpectedly [S3]. If the sensor temperature increases, it could be due to cooling system performance degradation, insufficient ventilation, or a change in the configured sensor temperature setpoint [S4]. Therefore, when image quality degrades, it is important to check the camera's current status, recent telemetry, and compare sensor temperature with its normal baseline and documented operating limits [S2].",
+      "result_count": 5,
+      "expected_source_paths": [
+        "camera/camera_operations.md",
+        "weather/observation_conditions.md"
+      ],
+      "retrieved_source_paths": [
+        "camera/camera_operations.md",
+        "weather/observation_conditions.md"
+      ],
+      "cited_source_paths": [
+        "camera/camera_operations.md"
+      ],
+      "retrieval_recall_at_k": 1.0,
+      "cited_source_ids": [
+        "S1",
+        "S2",
+        "S3",
+        "S4"
+      ],
+      "valid_source_ids": [
+        "S1",
+        "S2",
+        "S3",
+        "S4"
+      ],
+      "invalid_source_ids": [],
+      "citation_validity": 1.0,
+      "citation_coverage": 0.8,
+      "has_citations": true,
+      "abstention_expected": false,
+      "abstention_detected_by_heuristic": false,
+      "abstention_expectation_met": true
+    },
+    {
+      "id": "unknown_universal_temperature",
+      "query": "What is the exact optimal motor temperature for every telescope model?",
+      "latency_ms": 3911.53,
+      "answer": "The optimal motor temperature for every telescope model is not a universal threshold as stated in the reference context. The document [S1] mentions that motor temperature should be evaluated against the equipment manufacturer's operating limits and the telescope's established baseline. Therefore, the exact optimal motor temperature must come from the specific equipment documentation.",
+      "result_count": 5,
+      "expected_source_paths": [
+        "telescope/tracking_and_motor.md"
+      ],
+      "retrieved_source_paths": [
+        "camera/camera_operations.md",
+        "telescope/tracking_and_motor.md"
+      ],
+      "cited_source_paths": [
+        "telescope/tracking_and_motor.md"
+      ],
+      "retrieval_recall_at_k": 1.0,
+      "cited_source_ids": [
+        "S1"
+      ],
+      "valid_source_ids": [
+        "S1"
+      ],
+      "invalid_source_ids": [],
+      "citation_validity": 1.0,
+      "citation_coverage": 0.2,
+      "has_citations": true,
+      "abstention_expected": true,
+      "abstention_detected_by_heuristic": true,
+      "abstention_expectation_met": true
+    }
+  ],
+  "errors": [],
+  "limitations": [
+    "Citation ID validity does not prove factual support.",
+    "Abstention detection uses phrase matching and is only a heuristic.",
+    "Three curated queries are not sufficient to establish production quality."
+  ]
+}

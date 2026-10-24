@@ -62,6 +62,7 @@ def test_rolling_zscore_detector():
     assert results[-1] is True
 
 
+
 def test_evaluation_metrics():
     ground_truth = [
         False,
@@ -92,3 +93,4 @@ def test_evaluation_metrics():
     assert metrics.precision == 0.5
     assert metrics.recall == 0.5
     assert metrics.f1_score == 0.5
+    assert abs(metrics.false_positive_rate - (1 / 3)) < 1e-9

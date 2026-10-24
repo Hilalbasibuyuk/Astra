@@ -1,0 +1,29 @@
+﻿[
+    {
+        "Case":  "Known question",
+        "Query":  "What can cause a telescope tracking error?",
+        "LatencyMs":  32395,
+        "ResultCount":  5,
+        "Answer":  "A sustained increase in tracking error can be caused by mechanical friction or increased resistance in the drive system, motor current or temperature rising above its usual operating range, incorrect tracking parameters or calibration, encoder or position-feedback problems, communication delays between the control system and the telescope, or wind or other environmental disturbances. [S1]",
+        "Sources":  "S1: telescope/tracking_and_motor.md; S2: telescope/tracking_and_motor.md; S3: camera/camera_operations.md; S4: weather/observation_conditions.md; S5: weather/observation_conditions.md",
+        "Error":  null
+    },
+    {
+        "Case":  "Cross-domain question",
+        "Query":  "How can weather conditions and camera temperature affect image quality?",
+        "LatencyMs":  6893,
+        "ResultCount":  5,
+        "Answer":  "Weather conditions and camera temperature can significantly affect image quality. Weather conditions, such as atmospheric seeing and turbulence, cloud cover, and transparency, can degrade image sharpness and precision. Camera temperature and detector noise are also critical factors. The camera\u0027s sensor temperature can influence image noise and stability, and an unexpected increase in temperature may be due to cooling system performance degradation, insufficient ventilation, or elevated ambient temperature. When image quality degrades, it is important to check exposure time, gain, and acquisition settings, as well as sensor temperature and cooling status. Changes in these parameters can affect image brightness, noise characteristics, and the risk of saturation. Additionally, changes in environmental conditions, such as seeing and tracking accuracy, should be reviewed. [S1], [S2], [S3], [S4]",
+        "Sources":  "S1: camera/camera_operations.md; S2: camera/camera_operations.md; S3: camera/camera_operations.md; S4: camera/camera_operations.md; S5: weather/observation_conditions.md",
+        "Error":  null
+    },
+    {
+        "Case":  "Unknown question",
+        "Query":  "What is the exact optimal motor temperature for every telescope model?",
+        "LatencyMs":  4110,
+        "ResultCount":  5,
+        "Answer":  "The optimal motor temperature for every telescope model is not a universal threshold as stated in [S1]. Instead, the temperature should be evaluated against the equipment manufacturer\u0027s operating limits and the telescope\u0027s established baseline. Therefore, the exact optimal motor temperature cannot be determined from the provided context.",
+        "Sources":  "S1: telescope/tracking_and_motor.md; S2: telescope/tracking_and_motor.md; S3: telescope/tracking_and_motor.md; S4: camera/camera_operations.md; S5: camera/camera_operations.md",
+        "Error":  null
+    }
+]

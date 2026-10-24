@@ -1,7 +1,8 @@
+
 from dataclasses import dataclass
 
 
-@dataclass
+@dataclass(frozen=True)
 class EvaluationMetrics:
     true_positive: int
     true_negative: int
@@ -11,16 +12,16 @@ class EvaluationMetrics:
     precision: float
     recall: float
     f1_score: float
+    false_positive_rate: float
 
 
 def evaluate_predictions(
     ground_truth: list[bool],
     predictions: list[bool],
 ) -> EvaluationMetrics:
-
     if len(ground_truth) != len(predictions):
         raise ValueError(
-            "Ground truth and predictions must have the same length."
+            "ground_truth and predictions must have the same length."
         )
 
     true_positive = 0
@@ -28,29 +29,19 @@ def evaluate_predictions(
     false_positive = 0
     false_negative = 0
 
-    for actual, predicted in zip(
-        ground_truth,
-        predictions,
-    ):
+    for actual, predicted in zip(ground_truth, predictions):
         if actual and predicted:
             true_positive += 1
-
         elif not actual and not predicted:
             true_negative += 1
-
         elif not actual and predicted:
             false_positive += 1
-
-        elif actual and not predicted:
+        else:
             false_negative += 1
 
-    precision_denominator = (
-        true_positive + false_positive
-    )
-
-    recall_denominator = (
-        true_positive + false_negative
-    )
+    precision_denominator = true_positive + false_positive
+    recall_denominator = true_positive + false_negative
+    fpr_denominator = false_positive + true_negative
 
     precision = (
         true_positive / precision_denominator
@@ -65,10 +56,15 @@ def evaluate_predictions(
     )
 
     f1_denominator = precision + recall
-
     f1_score = (
         2 * precision * recall / f1_denominator
         if f1_denominator
+        else 0.0
+    )
+
+    false_positive_rate = (
+        false_positive / fpr_denominator
+        if fpr_denominator
         else 0.0
     )
 
@@ -80,4 +76,5 @@ def evaluate_predictions(
         precision=precision,
         recall=recall,
         f1_score=f1_score,
+        false_positive_rate=false_positive_rate,
     )
