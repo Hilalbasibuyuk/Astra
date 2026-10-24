@@ -53,7 +53,7 @@ class RollingZScoreDetector:
             stdev = statistics.stdev(window)
 
             if stdev == 0:
-                results.append(False)
+                results.append(value != mean)
                 continue
 
             z_score = abs((value - mean) / stdev)

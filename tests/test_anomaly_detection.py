@@ -94,3 +94,52 @@ def test_evaluation_metrics():
     assert metrics.recall == 0.5
     assert metrics.f1_score == 0.5
     assert abs(metrics.false_positive_rate - (1 / 3)) < 1e-9
+
+
+def test_zscore_detector_handles_insufficient_history():
+    detector = ZScoreDetector()
+
+    assert detector.detect([]) == []
+    assert detector.detect([10.0]) == [False]
+
+
+def test_zscore_detector_handles_constant_values():
+    detector = ZScoreDetector()
+
+    values = [10.0, 10.0, 10.0, 10.0]
+
+    assert detector.detect(values) == [False] * len(values)
+
+
+def test_rolling_zscore_detector_handles_insufficient_history():
+    detector = RollingZScoreDetector(
+        window_size=4,
+        threshold=2.0,
+    )
+
+    values = [10.0, 100.0]
+
+    results = detector.detect(values)
+
+    assert len(results) == len(values)
+    assert results == [False, False]
+
+
+def test_rolling_zscore_detects_change_after_constant_baseline():
+    detector = RollingZScoreDetector(
+        window_size=4,
+        threshold=3.0,
+    )
+
+    values = [
+        10.0,
+        10.0,
+        10.0,
+        10.0,
+        30.0,
+    ]
+
+    results = detector.detect(values)
+
+    assert len(results) == len(values)
+    assert results[-1] is True
