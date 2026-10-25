@@ -1,35 +1,39 @@
 {
-  "evaluated_at": "2026-10-22T18:59:09.419665+00:00",
+  "evaluated_at": "2026-10-25T11:53:47.920825+00:00",
   "api_url": "http://127.0.0.1:8000/rag/answer",
   "top_k": 5,
   "evaluation_type": "live_http_end_to_end",
-  "case_count": 3,
-  "successful_count": 3,
+  "case_count": 16,
+  "successful_count": 16,
   "error_count": 0,
   "summary": {
-    "mean_latency_ms": 9453.84,
-    "median_latency_ms": 6765.53,
-    "mean_retrieval_recall_at_k": 1.0,
-    "mean_citation_validity": 1.0,
+    "mean_latency_ms": 7431.93,
+    "median_latency_ms": 5346.09,
+    "mean_retrieval_recall_at_k": 0.9792,
+    "mean_citation_validity": 0.9375,
+    "mean_expected_source_citation_recall": 0.9167,
+    "mean_citation_precision_against_expected": 0.8021,
     "abstention_expectations_met": 3,
-    "abstention_cases_evaluated": 1
+    "abstention_cases_evaluated": 3
   },
   "results": [
     {
-      "id": "telescope_tracking",
-      "query": "What can cause a telescope tracking error?",
-      "latency_ms": 17684.47,
-      "answer": "A sustained increase in tracking error can be caused by mechanical friction or increased resistance in the drive system, motor current or temperature rising above its usual operating range, incorrect tracking parameters or calibration, encoder or position-feedback problems, communication delays between the control system and the telescope, or wind or other environmental disturbances. [S1]",
+      "id": "telescope-tracking-001",
+      "query": "What can cause a sustained increase in telescope tracking error?",
+      "latency_ms": 25602.53,
+      "answer": "A sustained increase in telescope tracking error can be caused by several factors, including mechanical friction or increased resistance in the drive system, motor current or temperature rising above its usual operating range, incorrect tracking parameters or calibration, encoder or position-feedback problems, communication delays between the control system and the telescope, or wind or other environmental disturbances. [S1]",
       "result_count": 5,
       "expected_source_paths": [
         "telescope/tracking_and_motor.md"
       ],
       "retrieved_source_paths": [
-        "camera/camera_operations.md",
         "telescope/tracking_and_motor.md",
         "weather/observation_conditions.md"
       ],
       "cited_source_paths": [
+        "telescope/tracking_and_motor.md"
+      ],
+      "expected_sources_cited": [
         "telescope/tracking_and_motor.md"
       ],
       "retrieval_recall_at_k": 1.0,
@@ -42,20 +46,138 @@
       "invalid_source_ids": [],
       "citation_validity": 1.0,
       "citation_coverage": 0.2,
+      "expected_source_citation_recall": 1.0,
+      "citation_precision_against_expected": 1.0,
       "has_citations": true,
       "abstention_expected": false,
       "abstention_detected_by_heuristic": false,
       "abstention_expectation_met": true
     },
     {
-      "id": "weather_camera_image_quality",
-      "query": "How can weather conditions and camera temperature affect image quality?",
-      "latency_ms": 6765.53,
-      "answer": "Weather conditions and camera temperature can significantly affect image quality. Weather conditions, such as atmospheric seeing and turbulence, cloud cover, and transparency, can degrade image sharpness and resolution [S1]. Camera temperature and detector noise are also critical factors. When the camera's sensor temperature increases, it can lead to higher image noise and a risk of saturation [S4]. Additionally, changes in exposure time and gain can influence image brightness and noise characteristics, which should be inspected when image quality changes unexpectedly [S3]. If the sensor temperature increases, it could be due to cooling system performance degradation, insufficient ventilation, or a change in the configured sensor temperature setpoint [S4]. Therefore, when image quality degrades, it is important to check the camera's current status, recent telemetry, and compare sensor temperature with its normal baseline and documented operating limits [S2].",
+      "id": "telescope-motor-002",
+      "query": "What can a gradual increase in telescope motor temperature indicate?",
+      "latency_ms": 4843.67,
+      "answer": "A gradual increase in telescope motor temperature can indicate several issues, such as increased mechanical load, insufficient cooling or ventilation, extended operation under demanding conditions, drive-system friction, or electrical or motor-control problems. It is important to compare the measurements with the established baseline and review tracking error, telescope status, alarms, and equipment documentation. If necessary, escalate to an authorized operator or maintenance procedure. [S1]",
       "result_count": 5,
       "expected_source_paths": [
+        "telescope/tracking_and_motor.md"
+      ],
+      "retrieved_source_paths": [
         "camera/camera_operations.md",
-        "weather/observation_conditions.md"
+        "telescope/tracking_and_motor.md"
+      ],
+      "cited_source_paths": [
+        "telescope/tracking_and_motor.md"
+      ],
+      "expected_sources_cited": [
+        "telescope/tracking_and_motor.md"
+      ],
+      "retrieval_recall_at_k": 1.0,
+      "cited_source_ids": [
+        "S1"
+      ],
+      "valid_source_ids": [
+        "S1"
+      ],
+      "invalid_source_ids": [],
+      "citation_validity": 1.0,
+      "citation_coverage": 0.2,
+      "expected_source_citation_recall": 1.0,
+      "citation_precision_against_expected": 1.0,
+      "has_citations": true,
+      "abstention_expected": false,
+      "abstention_detected_by_heuristic": false,
+      "abstention_expectation_met": true
+    },
+    {
+      "id": "telescope-current-003",
+      "query": "What might simultaneous increases in telescope motor current and temperature suggest?",
+      "latency_ms": 5322.01,
+      "answer": "Simultaneous increases in telescope motor current and temperature might suggest an increased mechanical load or resistance. However, this relationship alone is not sufficient to identify a root cause. [S1] recommends inspecting recent temperature and current time series, comparing them with normal operating baselines, and reviewing alarms and equipment documentation. [S2] indicates that a gradual increase in motor temperature could be associated with increased mechanical load, insufficient cooling, or electrical or motor-control problems.",
+      "result_count": 5,
+      "expected_source_paths": [
+        "telescope/tracking_and_motor.md"
+      ],
+      "retrieved_source_paths": [
+        "camera/camera_operations.md",
+        "telescope/tracking_and_motor.md"
+      ],
+      "cited_source_paths": [
+        "telescope/tracking_and_motor.md"
+      ],
+      "expected_sources_cited": [
+        "telescope/tracking_and_motor.md"
+      ],
+      "retrieval_recall_at_k": 1.0,
+      "cited_source_ids": [
+        "S1",
+        "S2"
+      ],
+      "valid_source_ids": [
+        "S1",
+        "S2"
+      ],
+      "invalid_source_ids": [],
+      "citation_validity": 1.0,
+      "citation_coverage": 0.4,
+      "expected_source_citation_recall": 1.0,
+      "citation_precision_against_expected": 1.0,
+      "has_citations": true,
+      "abstention_expected": false,
+      "abstention_detected_by_heuristic": true,
+      "abstention_expectation_met": false
+    },
+    {
+      "id": "camera-temperature-001",
+      "query": "What can an unexpected increase in camera sensor temperature indicate?",
+      "latency_ms": 10670.33,
+      "answer": "An unexpected increase in camera sensor temperature can indicate several issues, such as cooling system performance degradation, insufficient ventilation or elevated ambient temperature, a change in the configured sensor temperature setpoint, excessive heat transfer from surrounding equipment, or sensor temperature measurement or communication problems. [S1]\n\nWhen image quality degrades or sensor temperature increases, it is important to check the camera's current status and recent telemetry, compare the sensor temperature with its normal baseline and documented operating limits, review exposure time, gain, and acquisition configuration, inspect weather and telescope tracking metrics, check camera alarms and manufacturer documentation, and record the relevant measurements. [S2]\n\nChanges in exposure time or gain can influence image brightness, noise characteristics, and the risk of saturation. When image quality changes unexpectedly, inspect exposure time and gain settings, sensor temperature and cooling status, image saturation and underexposure indicators, the observing target and environmental conditions, and recent configuration changes. [S3]\n\nAn increase in both motor current and temperature may be consistent with increased mechanical load or resistance, but this relationship alone is not sufficient to identify a root cause. [S5]\n\nIn summary, an unexpected increase in camera sensor temperature could be due to various factors, and it is important to investigate these factors to determine the root cause. [S1, S2, S3, S5]",
+      "result_count": 5,
+      "expected_source_paths": [
+        "camera/camera_operations.md"
+      ],
+      "retrieved_source_paths": [
+        "camera/camera_operations.md",
+        "telescope/tracking_and_motor.md"
+      ],
+      "cited_source_paths": [
+        "camera/camera_operations.md",
+        "telescope/tracking_and_motor.md"
+      ],
+      "expected_sources_cited": [
+        "camera/camera_operations.md"
+      ],
+      "retrieval_recall_at_k": 1.0,
+      "cited_source_ids": [
+        "S1",
+        "S2",
+        "S3",
+        "S5"
+      ],
+      "valid_source_ids": [
+        "S1",
+        "S2",
+        "S3",
+        "S5"
+      ],
+      "invalid_source_ids": [],
+      "citation_validity": 1.0,
+      "citation_coverage": 0.8,
+      "expected_source_citation_recall": 1.0,
+      "citation_precision_against_expected": 0.5,
+      "has_citations": true,
+      "abstention_expected": false,
+      "abstention_detected_by_heuristic": true,
+      "abstention_expectation_met": false
+    },
+    {
+      "id": "camera-exposure-002",
+      "query": "Which settings should be checked when image brightness changes unexpectedly?",
+      "latency_ms": 5824.41,
+      "answer": "When image brightness changes unexpectedly, you should check the following settings:\n\n- Exposure time and gain settings.\n- Sensor temperature and cooling status.\n- Image saturation and underexposure indicators.\n- The observing target and environmental conditions.\n- Recent configuration changes.\n\nThese settings are directly mentioned in [S1]. Additionally, you should also consider the camera's current status and recent telemetry, review exposure time, gain, and acquisition configuration, inspect weather and telescope tracking metrics, and check camera alarms and manufacturer documentation, as detailed in [S2].",
+      "result_count": 5,
+      "expected_source_paths": [
+        "camera/camera_operations.md"
       ],
       "retrieved_source_paths": [
         "camera/camera_operations.md",
@@ -64,32 +186,347 @@
       "cited_source_paths": [
         "camera/camera_operations.md"
       ],
+      "expected_sources_cited": [
+        "camera/camera_operations.md"
+      ],
+      "retrieval_recall_at_k": 1.0,
+      "cited_source_ids": [
+        "S1",
+        "S2"
+      ],
+      "valid_source_ids": [
+        "S1",
+        "S2"
+      ],
+      "invalid_source_ids": [],
+      "citation_validity": 1.0,
+      "citation_coverage": 0.4,
+      "expected_source_citation_recall": 1.0,
+      "citation_precision_against_expected": 1.0,
+      "has_citations": true,
+      "abstention_expected": false,
+      "abstention_detected_by_heuristic": true,
+      "abstention_expectation_met": false
+    },
+    {
+      "id": "camera-quality-003",
+      "query": "What factors can degrade astronomical image quality?",
+      "latency_ms": 5975.02,
+      "answer": "Several factors can degrade astronomical image quality, including atmospheric seeing and turbulence [S1], cloud cover or changing transparency [S1], telescope focus and tracking accuracy [S1], camera temperature and detector noise [S3 and S4], exposure time, gain, and saturation [S1], optical contamination or alignment problems [S1], and weather conditions such as atmospheric seeing [S2]. An increase in sensor temperature can also affect image quality [S4], and this can be caused by cooling system performance degradation, insufficient ventilation, or elevated ambient temperature [S4].",
+      "result_count": 5,
+      "expected_source_paths": [
+        "camera/camera_operations.md"
+      ],
+      "retrieved_source_paths": [
+        "camera/camera_operations.md",
+        "weather/observation_conditions.md"
+      ],
+      "cited_source_paths": [
+        "camera/camera_operations.md",
+        "weather/observation_conditions.md"
+      ],
+      "expected_sources_cited": [
+        "camera/camera_operations.md"
+      ],
       "retrieval_recall_at_k": 1.0,
       "cited_source_ids": [
         "S1",
         "S2",
-        "S3",
         "S4"
       ],
       "valid_source_ids": [
         "S1",
         "S2",
-        "S3",
         "S4"
       ],
       "invalid_source_ids": [],
       "citation_validity": 1.0,
-      "citation_coverage": 0.8,
+      "citation_coverage": 0.6,
+      "expected_source_citation_recall": 1.0,
+      "citation_precision_against_expected": 0.5,
       "has_citations": true,
       "abstention_expected": false,
       "abstention_detected_by_heuristic": false,
       "abstention_expectation_met": true
     },
     {
-      "id": "unknown_universal_temperature",
+      "id": "dome-azimuth-001",
+      "query": "What can cause a mismatch between requested and measured dome azimuth?",
+      "latency_ms": 4196.53,
+      "answer": "Possible causes for a mismatch between requested and measured dome azimuth include:\n\n- Increased mechanical friction.\n- Motor or drive-system problems.\n- Encoder or position-feedback faults.\n- Communication delays.\n- Incorrect motion commands or configuration.\n- Environmental conditions affecting operation.\n\n[Source: S1]",
+      "result_count": 5,
+      "expected_source_paths": [
+        "dome/dome_operations.md"
+      ],
+      "retrieved_source_paths": [
+        "dome/dome_operations.md",
+        "weather/observation_conditions.md"
+      ],
+      "cited_source_paths": [],
+      "expected_sources_cited": [],
+      "retrieval_recall_at_k": 1.0,
+      "cited_source_ids": [],
+      "valid_source_ids": [],
+      "invalid_source_ids": [],
+      "citation_validity": 0.0,
+      "citation_coverage": 0.0,
+      "expected_source_citation_recall": 0.0,
+      "citation_precision_against_expected": 0.0,
+      "has_citations": false,
+      "abstention_expected": false,
+      "abstention_detected_by_heuristic": false,
+      "abstention_expectation_met": true
+    },
+    {
+      "id": "dome-temperature-002",
+      "query": "What should be checked when dome motor temperature increases?",
+      "latency_ms": 5370.17,
+      "answer": "When the dome motor temperature increases, the following should be checked:\n\n- Evaluate the recent temperature trend.\n- Monitor motor current and rotation behavior, if available.\n- Assess the dome's operating state.\n- Refer to the manufacturer's documented operating limits.\n- Review existing warnings and fault indicators.\n\nA high temperature reading should be supported by additional evidence before assigning a definitive root cause. [S1] and [S3] provide relevant procedures for evaluating motor temperature anomalies.",
+      "result_count": 5,
+      "expected_source_paths": [
+        "dome/dome_operations.md"
+      ],
+      "retrieved_source_paths": [
+        "dome/dome_operations.md",
+        "telescope/tracking_and_motor.md"
+      ],
+      "cited_source_paths": [
+        "dome/dome_operations.md",
+        "telescope/tracking_and_motor.md"
+      ],
+      "expected_sources_cited": [
+        "dome/dome_operations.md"
+      ],
+      "retrieval_recall_at_k": 1.0,
+      "cited_source_ids": [
+        "S1",
+        "S3"
+      ],
+      "valid_source_ids": [
+        "S1",
+        "S3"
+      ],
+      "invalid_source_ids": [],
+      "citation_validity": 1.0,
+      "citation_coverage": 0.4,
+      "expected_source_citation_recall": 1.0,
+      "citation_precision_against_expected": 0.5,
+      "has_citations": true,
+      "abstention_expected": false,
+      "abstention_detected_by_heuristic": false,
+      "abstention_expectation_met": true
+    },
+    {
+      "id": "dome-shutter-003",
+      "query": "How should an unexpected dome shutter state be investigated?",
+      "latency_ms": 6736.39,
+      "answer": "To investigate an unexpected dome shutter state, follow these steps:\n\n1. Retrieve the latest dome telemetry and recent history.\n2. Inspect the azimuth, rotation speed, motor temperature, and shutter state.\n3. Check the current device status and any active alarms.\n4. Compare the measurements with the dome's documented operating limits.\n5. Review the telescope and weather conditions for relevant context.\n6. If the anomaly persists or the available evidence is insufficient, recommend an operator inspection.\n\nThis procedure is detailed in [S2]. Additionally, ensure that any control actions are through the approved control interface, equipment-specific safety checks, and the required operator-approval process, as outlined in [S3].",
+      "result_count": 5,
+      "expected_source_paths": [
+        "dome/dome_operations.md"
+      ],
+      "retrieved_source_paths": [
+        "dome/dome_operations.md",
+        "weather/observation_conditions.md"
+      ],
+      "cited_source_paths": [
+        "dome/dome_operations.md"
+      ],
+      "expected_sources_cited": [
+        "dome/dome_operations.md"
+      ],
+      "retrieval_recall_at_k": 1.0,
+      "cited_source_ids": [
+        "S2",
+        "S3"
+      ],
+      "valid_source_ids": [
+        "S2",
+        "S3"
+      ],
+      "invalid_source_ids": [],
+      "citation_validity": 1.0,
+      "citation_coverage": 0.4,
+      "expected_source_citation_recall": 1.0,
+      "citation_precision_against_expected": 1.0,
+      "has_citations": true,
+      "abstention_expected": false,
+      "abstention_detected_by_heuristic": false,
+      "abstention_expectation_met": true
+    },
+    {
+      "id": "weather-clouds-001",
+      "query": "How can increasing cloud cover affect astronomical observations?",
+      "latency_ms": 5321.5,
+      "answer": "Increasing cloud cover can affect astronomical observations by reducing the amount of light reaching the telescope and making observing conditions unstable. This can lead to intermittent obstruction of the target, reduced transparency, and deteriorating observation conditions, necessitating a reassessment of the current observation plan. [S1] Additionally, cloud cover can impact image quality by causing atmospheric seeing and turbulence, which can reduce image sharpness and affect precise angular resolution measurements. [S4]",
+      "result_count": 5,
+      "expected_source_paths": [
+        "weather/observation_conditions.md"
+      ],
+      "retrieved_source_paths": [
+        "camera/camera_operations.md",
+        "weather/observation_conditions.md"
+      ],
+      "cited_source_paths": [
+        "weather/observation_conditions.md"
+      ],
+      "expected_sources_cited": [
+        "weather/observation_conditions.md"
+      ],
+      "retrieval_recall_at_k": 1.0,
+      "cited_source_ids": [
+        "S1",
+        "S4"
+      ],
+      "valid_source_ids": [
+        "S1",
+        "S4"
+      ],
+      "invalid_source_ids": [],
+      "citation_validity": 1.0,
+      "citation_coverage": 0.4,
+      "expected_source_citation_recall": 1.0,
+      "citation_precision_against_expected": 1.0,
+      "has_citations": true,
+      "abstention_expected": false,
+      "abstention_detected_by_heuristic": false,
+      "abstention_expectation_met": true
+    },
+    {
+      "id": "weather-wind-002",
+      "query": "How should a sudden increase in wind speed be assessed?",
+      "latency_ms": 11195.47,
+      "answer": "A sudden increase in wind speed should be assessed by evaluating it against the manufacturer's limits, local observatory safety procedures, and the current state of the telescope and dome. This evaluation should be based on the information provided in the manufacturer's documentation and approved site procedures [S1]. \n\nAdditionally, if the increase in wind speed is accompanied by an increase in motor current and temperature, it may indicate an increased mechanical load or resistance, but this alone is not sufficient to identify a root cause [S2]. In such cases, a diagnostic sequence should be followed, including inspecting recent temperature and current time series, comparing them with normal operating baselines, and reviewing tracking error and telescope status over the same time interval [S2]. If necessary, escalate to an authorized operator or maintenance procedure [S2]. \n\nFor a comprehensive assessment of observation suitability, consider factors such as cloud cover, transparency, atmospheric seeing, temperature and humidity, telescope tracking performance, camera status, and image quality [S3]. However, no single metric should determine observation suitability unless an approved observatory policy defines that rule [S3]. \n\nLastly, if the wind speed increase is accompanied by an increase in dome motor temperature, evaluate it against the manufacturer's operating limits and the dome's established baseline [S5]. A high temperature reading should not be assigned a definitive root cause without supporting evidence [S5].",
+      "result_count": 5,
+      "expected_source_paths": [
+        "weather/observation_conditions.md"
+      ],
+      "retrieved_source_paths": [
+        "dome/dome_operations.md",
+        "telescope/tracking_and_motor.md",
+        "weather/observation_conditions.md"
+      ],
+      "cited_source_paths": [
+        "dome/dome_operations.md",
+        "telescope/tracking_and_motor.md",
+        "weather/observation_conditions.md"
+      ],
+      "expected_sources_cited": [
+        "weather/observation_conditions.md"
+      ],
+      "retrieval_recall_at_k": 1.0,
+      "cited_source_ids": [
+        "S1",
+        "S2",
+        "S3",
+        "S5"
+      ],
+      "valid_source_ids": [
+        "S1",
+        "S2",
+        "S3",
+        "S5"
+      ],
+      "invalid_source_ids": [],
+      "citation_validity": 1.0,
+      "citation_coverage": 0.8,
+      "expected_source_citation_recall": 1.0,
+      "citation_precision_against_expected": 0.3333333333333333,
+      "has_citations": true,
+      "abstention_expected": false,
+      "abstention_detected_by_heuristic": true,
+      "abstention_expectation_met": false
+    },
+    {
+      "id": "weather-humidity-003",
+      "query": "What operational concern may be associated with high humidity?",
+      "latency_ms": 3620.28,
+      "answer": "High humidity may increase condensation risk and affect equipment stability under some conditions. It can also contribute to thermal gradients, which may affect equipment stability. [S1]",
+      "result_count": 5,
+      "expected_source_paths": [
+        "weather/observation_conditions.md"
+      ],
+      "retrieved_source_paths": [
+        "camera/camera_operations.md",
+        "telescope/tracking_and_motor.md",
+        "weather/observation_conditions.md"
+      ],
+      "cited_source_paths": [
+        "weather/observation_conditions.md"
+      ],
+      "expected_sources_cited": [
+        "weather/observation_conditions.md"
+      ],
+      "retrieval_recall_at_k": 1.0,
+      "cited_source_ids": [
+        "S1"
+      ],
+      "valid_source_ids": [
+        "S1"
+      ],
+      "invalid_source_ids": [],
+      "citation_validity": 1.0,
+      "citation_coverage": 0.2,
+      "expected_source_citation_recall": 1.0,
+      "citation_precision_against_expected": 1.0,
+      "has_citations": true,
+      "abstention_expected": false,
+      "abstention_detected_by_heuristic": false,
+      "abstention_expectation_met": true
+    },
+    {
+      "id": "cross-domain-image-quality-001",
+      "query": "What should be investigated when astronomical image quality deteriorates?",
+      "latency_ms": 10929.62,
+      "answer": "When astronomical image quality deteriorates, several factors should be investigated according to the provided references. Atmospheric seeing and turbulence are primary causes, as mentioned in [S1]. Other factors include cloud cover or changing transparency, telescope focus and tracking accuracy, camera temperature and detector noise, exposure time, gain, and saturation, optical contamination or alignment problems, and camera telemetry, as detailed in [S2]. \n\nAdditionally, when image quality degrades, it is recommended to check the camera's current status and recent telemetry, compare sensor temperature with its normal baseline and documented operating limits, review exposure time, gain, and acquisition configuration, inspect weather and telescope tracking metrics, check camera alarms and manufacturer documentation, and record the relevant measurements, as outlined in [S3]. \n\nIf cloud cover increases, it is advised to inspect the latest cloud cover measurements and their recent trends, compare them with the observatory's documented operating limits, review telescope, dome, and camera status, and reassess the current observation plan if necessary, as described in [S4]. \n\nLastly, if cloud cover increases, it may indicate reduced transparency, intermittent obstruction of the target, deteriorating observation conditions, or a need to reassess the current observation plan, as stated in [S5]. \n\nIn summary, a comprehensive approach should be taken, considering both atmospheric and operational factors.",
+      "result_count": 5,
+      "expected_source_paths": [
+        "camera/camera_operations.md",
+        "telescope/tracking_and_motor.md",
+        "weather/observation_conditions.md"
+      ],
+      "retrieved_source_paths": [
+        "camera/camera_operations.md",
+        "weather/observation_conditions.md"
+      ],
+      "cited_source_paths": [
+        "camera/camera_operations.md",
+        "weather/observation_conditions.md"
+      ],
+      "expected_sources_cited": [
+        "camera/camera_operations.md",
+        "weather/observation_conditions.md"
+      ],
+      "retrieval_recall_at_k": 0.6666666666666666,
+      "cited_source_ids": [
+        "S1",
+        "S2",
+        "S3",
+        "S4",
+        "S5"
+      ],
+      "valid_source_ids": [
+        "S1",
+        "S2",
+        "S3",
+        "S4",
+        "S5"
+      ],
+      "invalid_source_ids": [],
+      "citation_validity": 1.0,
+      "citation_coverage": 1.0,
+      "expected_source_citation_recall": 0.6666666666666666,
+      "citation_precision_against_expected": 1.0,
+      "has_citations": true,
+      "abstention_expected": false,
+      "abstention_detected_by_heuristic": true,
+      "abstention_expectation_met": false
+    },
+    {
+      "id": "unknown_universal_motor_temperature",
       "query": "What is the exact optimal motor temperature for every telescope model?",
-      "latency_ms": 3911.53,
-      "answer": "The optimal motor temperature for every telescope model is not a universal threshold as stated in the reference context. The document [S1] mentions that motor temperature should be evaluated against the equipment manufacturer's operating limits and the telescope's established baseline. Therefore, the exact optimal motor temperature must come from the specific equipment documentation.",
+      "latency_ms": 4307.67,
+      "answer": "The optimal motor temperature for every telescope model is not a universal threshold as stated in [S1]. Instead, the temperature should be evaluated against the equipment manufacturer's operating limits and the telescope's established baseline. Therefore, the exact optimal motor temperature cannot be determined from the given context.",
       "result_count": 5,
       "expected_source_paths": [
         "telescope/tracking_and_motor.md"
@@ -99,6 +536,9 @@
         "telescope/tracking_and_motor.md"
       ],
       "cited_source_paths": [
+        "telescope/tracking_and_motor.md"
+      ],
+      "expected_sources_cited": [
         "telescope/tracking_and_motor.md"
       ],
       "retrieval_recall_at_k": 1.0,
@@ -111,6 +551,81 @@
       "invalid_source_ids": [],
       "citation_validity": 1.0,
       "citation_coverage": 0.2,
+      "expected_source_citation_recall": 1.0,
+      "citation_precision_against_expected": 1.0,
+      "has_citations": true,
+      "abstention_expected": true,
+      "abstention_detected_by_heuristic": true,
+      "abstention_expectation_met": true
+    },
+    {
+      "id": "unknown_universal_wind_limit",
+      "query": "What is the exact safe wind speed in km/h for every observatory telescope and dome?",
+      "latency_ms": 4645.72,
+      "answer": "The exact safe wind speed in km/h for every observatory telescope and dome cannot be determined from the provided context. The reference documents discuss the effects of wind on observatory equipment and the importance of obtaining operational limits from relevant equipment documentation and approved site procedures, but do not provide a universal safe wind-speed threshold. [S1]",
+      "result_count": 5,
+      "expected_source_paths": [
+        "weather/observation_conditions.md"
+      ],
+      "retrieved_source_paths": [
+        "dome/dome_operations.md",
+        "telescope/tracking_and_motor.md",
+        "weather/observation_conditions.md"
+      ],
+      "cited_source_paths": [
+        "weather/observation_conditions.md"
+      ],
+      "expected_sources_cited": [
+        "weather/observation_conditions.md"
+      ],
+      "retrieval_recall_at_k": 1.0,
+      "cited_source_ids": [
+        "S1"
+      ],
+      "valid_source_ids": [
+        "S1"
+      ],
+      "invalid_source_ids": [],
+      "citation_validity": 1.0,
+      "citation_coverage": 0.2,
+      "expected_source_citation_recall": 1.0,
+      "citation_precision_against_expected": 1.0,
+      "has_citations": true,
+      "abstention_expected": true,
+      "abstention_detected_by_heuristic": true,
+      "abstention_expectation_met": true
+    },
+    {
+      "id": "unknown_universal_camera_temperature",
+      "query": "What is the exact optimal sensor temperature for every astronomical camera model?",
+      "latency_ms": 4349.59,
+      "answer": "The reference context does not provide an exact optimal sensor temperature for every astronomical camera model. [S1] states that the expected operating temperature depends on the camera model, detector technology, and observing configuration, and that ASTRA should use equipment-specific documentation rather than assuming a universal target temperature.",
+      "result_count": 5,
+      "expected_source_paths": [
+        "camera/camera_operations.md"
+      ],
+      "retrieved_source_paths": [
+        "camera/camera_operations.md",
+        "telescope/tracking_and_motor.md"
+      ],
+      "cited_source_paths": [
+        "camera/camera_operations.md"
+      ],
+      "expected_sources_cited": [
+        "camera/camera_operations.md"
+      ],
+      "retrieval_recall_at_k": 1.0,
+      "cited_source_ids": [
+        "S1"
+      ],
+      "valid_source_ids": [
+        "S1"
+      ],
+      "invalid_source_ids": [],
+      "citation_validity": 1.0,
+      "citation_coverage": 0.2,
+      "expected_source_citation_recall": 1.0,
+      "citation_precision_against_expected": 1.0,
       "has_citations": true,
       "abstention_expected": true,
       "abstention_detected_by_heuristic": true,
@@ -119,8 +634,10 @@
   ],
   "errors": [],
   "limitations": [
-    "Citation ID validity does not prove factual support.",
-    "Abstention detection uses phrase matching and is only a heuristic.",
-    "Three curated queries are not sufficient to establish production quality."
+    "Citation ID validity does not prove that a source supports the associated claim.",
+    "Expected-source citation precision is benchmark-relative and may penalize additional relevant sources.",
+    "Abstention detection uses phrase matching and can produce false positives or false negatives.",
+    "The evaluation set is small and curated; results do not establish production reliability.",
+    "Answer correctness and factual grounding still require claim-level review against the retrieved source text."
   ]
 }

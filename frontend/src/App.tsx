@@ -4,6 +4,7 @@ import {
   Activity,
   AlertCircle,
   BrainCircuit,
+  BookOpen,
   Camera,
   CheckCircle2,
   ChevronRight,
@@ -27,6 +28,7 @@ import {
 } from 'recharts'
 import './App.css'
 import EventsPage from './EventsPage'
+import RAGPage from './RAGPage'
 
 const API = '/api/v1'
 const TELESCOPE_ID = 'TCS-01'
@@ -199,7 +201,7 @@ export default function App() {
   const [loading, setLoading] = useState(true)
   const [refreshing, setRefreshing] = useState(false)
   const [activePage, setActivePage] = useState<
-  'overview' | 'telemetry' | 'diagnostics' | 'events'
+  'overview' | 'telemetry' | 'diagnostics' | 'events' | 'rag'
 >('overview')
   const [diagnostic, setDiagnostic] = useState<DiagnosticResponse | null>(null)
   const [diagnosticError, setDiagnosticError] = useState('')
@@ -349,6 +351,12 @@ export default function App() {
             >
               <AlertCircle size={18} /> Events
           </button>
+          <button
+            className={`nav-item ${activePage === 'rag' ? 'active' : ''}`}
+            onClick={() => setActivePage('rag')}
+          >
+            <BookOpen size={18} /> Knowledge Assistant
+          </button>
         </nav>
 
         <div className="sidebar-bottom">
@@ -392,12 +400,14 @@ export default function App() {
                 {activePage === 'telemetry' && 'Telemetry explorer'}
                 {activePage === 'diagnostics' && 'AI diagnostics'}
                 {activePage === 'events' && 'Event monitoring'}
+                {activePage === 'rag' && 'Knowledge Assistant'}
               </h1>
               <p>
                 {activePage === 'overview' && 'Real-time status of your observatory systems.'}
                 {activePage === 'telemetry' && 'Live measurements and recent telescope telemetry.'}
                 {activePage === 'diagnostics' && 'Run a source-grounded diagnostic analysis for the telescope.'}
                 {activePage === 'events' && 'Review detected anomalies and manage operational incidents.'}
+                {activePage === 'rag' &&'Ask questions and explore source-grounded observatory knowledge.'}
               </p>
             </div>
             <div className="updated-block">
@@ -754,6 +764,7 @@ export default function App() {
             </section>
           )}
           {activePage === 'events' && <EventsPage />}
+          {activePage === 'rag' && <RAGPage />}
 
           <footer className="page-footer">
             <span>ASTRA · Observatory Data &amp; AI Platform</span>
