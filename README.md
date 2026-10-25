@@ -93,6 +93,12 @@ ASTRA is a research and engineering platform for this workflow. Its simulated da
 - Distinguish observations from possible explanations.
 - Avoid presenting an LLM-generated hypothesis as a definitive diagnosis.
 
+
+### Design objective
+
+ASTRA is designed to connect three distinct capabilities: observability through telemetry, detection through anomaly analysis, and explanation through retrieval-augmented generation. The goal is not simply to generate an AI response, but to provide a traceable workflow in which observed measurements, detected deviations, retrieved documentation, and generated explanations can be examined separately.
+
+
 ## 4. Key Features
 
 | Feature | Description |
@@ -107,56 +113,78 @@ ASTRA is a research and engineering platform for this workflow. Its simulated da
 | Diagnostic API | Combines telemetry analysis and AI-assisted explanations. |
 | Automated testing | Covers API behavior, simulation, retrieval, answer generation, and evaluation utilities. |
 | Evaluation utilities | Measures retrieval ranking and includes anomaly detection delay evaluation logic. |
+| Interactive dashboard | React and TypeScript frontend for monitoring telemetry, viewing anomaly diagnostics, managing events, and querying the knowledge base. |
+| Live telemetry visualization | Refreshes telemetry data periodically through the backend API, allowing users to observe changing simulated measurements. |
+| Knowledge Assistant | Interactive RAG interface for asking technical questions and inspecting retrieved source passages. |
+| Event management | PostgreSQL-backed event endpoints support listing events, viewing individual event details, and resolving events. |
+
 
 ## 5. System Architecture
 
 The following diagram represents the main logical flow of the platform.
 
-```mermaid
+
 flowchart TD
-    subgraph Simulation["Simulation Layer"]
-        T[Telescope Simulator]
-        C[Camera Simulator]
-        W[Weather Simulator]
-        D[Dome Simulator]
+    subgraph Frontend["Frontend — React + TypeScript"]
+        Dashboard["Overview / Telemetry"]
+        DiagnosticsUI["AI Diagnostics"]
+        EventsUI["Events"]
+        RAGUI["Knowledge Assistant"]
     end
 
-    T --> Worker[Telemetry Worker]
-    C --> Worker
-    W --> Worker
-    D --> Worker
+    subgraph Simulation["Simulation Layer"]
+        Telescope["Telescope Simulator"]
+        Camera["Camera Simulator"]
+        Weather["Weather Simulator"]
+        Dome["Dome Simulator"]
+    end
 
-    Worker --> Q[(QuestDB)]
+    Telescope --> Worker["Telemetry Worker"]
+    Camera --> Worker
+    Weather --> Worker
+    Dome --> Worker
 
-    Q --> API[FastAPI Backend]
-    API --> Query[Telemetry Query Service]
-    Query --> Q
+    Worker --> QuestDB[("QuestDB<br/>Time-Series Data")]
 
-    API --> Anomaly[Anomaly Detection Service]
-    Anomaly --> History[Historical Telemetry Analysis]
-    History --> Decision{Latest Observation Anomalous?}
+    Dashboard --> API["FastAPI Backend"]
+    DiagnosticsUI --> API
+    EventsUI --> API
+    RAGUI --> API
 
-    Decision -->|No| Result[Diagnostic Result]
-    Decision -->|Yes| Retriever[RAG Retriever]
+    API --> TelemetryService["Telemetry Query Service"]
+    TelemetryService --> QuestDB
+
+    API --> Anomaly["Anomaly Detection"]
+    Anomaly --> History["Historical Telemetry Analysis"]
+    History --> Decision{"Latest observation<br/>is anomalous?"}
+
+    Decision -->|No| DiagnosticResult["Diagnostic Result"]
+    Decision -->|Yes| Retriever["RAG Retriever"]
 
     subgraph Knowledge["Knowledge Retrieval and Generation"]
-        Docs[Technical Documents]
-        Chunk[Document Chunking]
-        Embed[Embedding Model]
-        Vector[(Qdrant Vector Store)]
-        Retriever --> Vector
-        Docs --> Chunk
-        Chunk --> Embed
-        Embed --> Vector
-        Retriever --> Context[Retrieved Context and Sources]
-        Context --> LLM[Ollama LLM Client]
-        LLM --> Answer[Source-Grounded Explanation]
+        Docs["Technical Documents"]
+        Chunking["Chunking"]
+        Embedding["Embedding Model"]
+        Qdrant[("Qdrant Vector Store")]
+        Context["Retrieved Passages"]
+        Ollama["Ollama LLM"]
+        Answer["Grounded Explanation"]
+
+        Docs --> Chunking
+        Chunking --> Embedding
+        Embedding --> Qdrant
+        Retriever --> Qdrant
+        Qdrant --> Context
+        Context --> Ollama
+        Ollama --> Answer
     end
 
-    Answer --> Result
-    Result --> API
-    API --> Client[API Client]
-```
+    Answer --> DiagnosticResult
+    DiagnosticResult --> API
+
+    API --> PostgreSQL[("PostgreSQL<br/>Event Persistence")]
+    EventsUI --> API
+
 
 The diagram describes the intended diagnostic flow. Individual components can also be exercised independently through their respective APIs and tests.
 
@@ -171,6 +199,20 @@ The diagram describes the intended diagnostic flow. Individual components can al
 **Traceability:** Retrieved sources accompany generated answers, allowing users to inspect the supporting documentation.
 
 **Testability:** Services and API routes have automated tests for expected behavior and error conditions.
+
+
+### Data and service boundaries
+
+ASTRA separates time-series telemetry from operational event persistence and vector-based knowledge retrieval.
+
+- **QuestDB** stores and queries time-series telemetry generated by the simulation layer.
+- **PostgreSQL** persists operational events and supports event retrieval and resolution workflows.
+- **Qdrant** stores document embeddings and metadata used by semantic retrieval.
+- **FastAPI** exposes the backend capabilities through HTTP endpoints.
+- **React and TypeScript** provide the interactive dashboard and knowledge-query interface.
+- **Ollama** serves the configured language model used to generate responses from retrieved context.
+
+These components have distinct responsibilities. A telemetry query, an event-management operation, and a RAG query follow different service paths even though they are exposed through the same backend application.
 
 ## 6. End-to-End Workflow
 
@@ -224,6 +266,24 @@ The response can include source references so the user can trace the explanation
 The API returns the diagnostic result. Depending on the observed condition, the response may include anomaly findings, an explanation, and supporting sources.
 
 The explanation is decision-support information; it is not proof of the underlying physical cause.
+
+
+### User interaction workflow
+
+ASTRA exposes its capabilities through both HTTP endpoints and a browser-based dashboard.
+
+1. The user opens the dashboard and selects a view such as Telemetry, AI Diagnostics, Events, or Knowledge Assistant.
+2. The frontend sends an HTTP request to the corresponding FastAPI endpoint.
+3. The backend validates the request and delegates the operation to the relevant service.
+4. The service queries the appropriate data source or performs the requested analysis.
+5. The backend returns a structured response.
+6. The frontend renders the returned measurements, diagnostic findings, event information, or generated answer.
+
+For a Knowledge Assistant query, the backend retrieves relevant passages from Qdrant, supplies the retrieved context to the configured Ollama model, and returns the generated answer with source metadata.
+
+For a diagnostic request, the anomaly detection workflow analyzes telemetry history and determines whether the latest observation meets the condition for further investigation. When the condition is met, the diagnostic workflow can invoke RAG to provide a documentation-based explanation.
+
+These workflows are related but distinct: asking a general technical question does not require the same execution path as analyzing a particular telescope's telemetry.
 
 ## 7. Technology Stack
 
@@ -285,6 +345,28 @@ The API layer exposes telemetry, retrieval, answer-generation, health, and diagn
 
 FastAPI also provides interactive API documentation, which can be opened at `/docs` when the application is running.
 
+
+### 8.6 Frontend dashboard
+
+The frontend is built with React, TypeScript, Vite, and Lucide icons. It provides a browser-based interface for interacting with the ASTRA backend.
+
+The dashboard separates the main user workflows into dedicated views:
+
+- **Overview:** A high-level view of the observatory platform.
+- **Telemetry:** Displays telemetry retrieved from the backend API.
+- **AI Diagnostics:** Presents anomaly findings and diagnostic explanations.
+- **Events:** Provides access to persisted operational events.
+- **Knowledge Assistant:** Allows users to submit technical questions to the RAG answer endpoint and inspect retrieved source passages.
+
+The frontend communicates with FastAPI over HTTP. During local development, the Vite development server proxies backend requests to the API server.
+
+The telemetry interface periodically refreshes its data, allowing users to observe changes as the simulators generate new observations.
+
+The Knowledge Assistant presents generated answers alongside source information. This makes it possible to inspect the retrieved evidence rather than relying only on the generated text.
+
+The frontend is a monitoring and decision-support interface. It does not independently establish the physical cause of an anomaly or replace validated equipment-control procedures.
+
+
 ## 9. Anomaly Detection
 
 Anomaly detection helps identify observations that deviate from expected operating behavior.
@@ -338,13 +420,21 @@ However, retrieval quality and answer quality are different things. A relevant p
 
 The retriever searches the knowledge base for relevant technical passages. The LLM then uses those passages to explain plausible causes and appropriate checks, while preserving the distinction between a possible explanation and a confirmed root cause.
 
+
 ### Knowledge sources
 
-The current knowledge base includes technical material such as:
+The current knowledge base covers the main simulated observatory subsystems:
 
-- `knowledge/telescope/tracking_and_motor.md`
+- `knowledge/telescope/tracking_and_motor.md` — telescope tracking, motor temperature and current, and related diagnostic checks.
+- `knowledge/camera/camera_operations.md` — camera operation and image-acquisition troubleshooting.
+- `knowledge/dome/dome_operations.md` — dome operation and related checks.
+- `knowledge/weather/observation_conditions.md` — environmental and observation conditions.
 
-This document covers tracking error, motor temperature and current, possible contributing factors, baseline comparisons, diagnostic checks, escalation, and safety considerations.
+Documents are split into chunks, embedded, and indexed in Qdrant with metadata that allows retrieved passages to be associated with their source documents.
+
+The retrieval pipeline returns relevant passages before generation. The answer-generation component uses those passages as context and returns source metadata with its response.
+
+Adding a document requires more than placing a Markdown file in the knowledge directory: the document must also be processed by the project's ingestion pipeline so its chunks and embeddings become available for retrieval.
 
 ## 11. API Reference
 
@@ -380,6 +470,20 @@ Example:
 ```http
 GET /api/v1/telemetry/telescope/TCS-01/latest
 ```
+
+
+### Events
+
+| Method | Endpoint | Purpose |
+|---|---|---|
+| GET | `/api/v1/events` | Lists persisted operational events. |
+| GET | `/api/v1/events/{event_id}` | Retrieves a specific event. |
+| POST | `/api/v1/events/{event_id}/resolve` | Resolves an event through the event-management workflow. |
+
+Events are managed separately from time-series telemetry. QuestDB is used for telemetry queries, while PostgreSQL supports event persistence.
+
+Consult `/docs` for the current request parameters, response schemas, and error responses.
+
 
 ### RAG search
 
@@ -476,23 +580,36 @@ Run the full suite with:
 python -m pytest -v
 ```
 
-### RAG retrieval evaluation
 
-The evaluation utility in `tests.evaluation.evaluator` previously reported:
+### RAG evaluation
+
+The RAG evaluation suite measures retrieval quality, source attribution, and answer behavior on a defined set of evaluation cases.
+
+The latest reported evaluation produced the following results:
 
 | Metric | Result |
 |---|---:|
-| Evaluation cases | 8 |
-| Retrieval cutoff (`k`) | 5 |
-| Mean Recall@5 | 1.000 |
-| Mean Reciprocal Rank@5 | 0.875 |
+| Evaluation cases | 16 |
+| Recall@5 | 0.9792 |
+| Citation validity | 0.9375 |
+| Expected-source citation recall | 0.9167 |
+| Citation precision | 0.8021 |
+| Mean response latency | 7.43 s |
+| Median response latency | 5.35 s |
+| Abstention tests passed | 3/3 |
 
-**Interpretation:**
+**Interpretation**
 
-- **Recall@5 = 1.0:** Under the evaluator's current eight-case dataset and relevance labels, the relevant target was retrieved within the top five results for every case.
-- **MRR@5 = 0.875:** The reciprocal rank of the first relevant result averaged 0.875 across those cases. This indicates that relevant results generally ranked near the top.
+- **Recall@5:** Relevant target passages were retrieved within the top five results at a high rate across the evaluation set.
+- **Citation validity:** Measures whether generated source references are valid according to the evaluator's citation rules.
+- **Expected-source citation recall:** Measures how often expected supporting sources are cited.
+- **Citation precision:** Measures how much of the generated citation output meets the evaluator's relevance criteria.
+- **Response latency:** Mean and median times describe the observed response speed for this evaluation run.
+- **Abstention tests:** All three evaluated cases that required the system to abstain passed.
 
-These results describe the current evaluation dataset, not general performance on every possible observatory query. A larger and more diverse evaluation set is needed for stronger conclusions.
+These metrics evaluate different parts of the RAG pipeline. High retrieval recall does not guarantee that every generated claim is correct or adequately supported. Citation validity also does not necessarily establish that a cited passage entails the claim.
+
+The results apply to the current evaluation dataset and execution environment. They should not be interpreted as production-wide performance guarantees.
 
 ### Further evaluation opportunities
 
@@ -596,6 +713,28 @@ python -m apps.workers.telemetry_worker
 This command assumes that the worker module remains at that path in the current repository.
 
 Keep the worker running while verifying that new observations appear in the telemetry endpoints.
+
+
+### Start the frontend
+
+Open a separate terminal and navigate to the frontend directory:
+
+```powershell
+cd frontend
+npm install
+npm run dev
+```
+
+Open the local URL printed by Vite in the terminal.
+
+During local development, the Vite proxy forwards configured API and RAG requests to the FastAPI backend. Ensure that the backend is running and that the required infrastructure and LLM dependencies are available.
+
+To verify the production build:
+
+```powershell
+npm run build
+```
+
 
 ### Verify RAG
 
