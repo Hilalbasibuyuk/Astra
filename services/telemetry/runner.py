@@ -1,3 +1,4 @@
+
 import asyncio
 import logging
 
@@ -13,11 +14,13 @@ class TelemetryRunner:
         telemetry_service: TelemetryService,
         interval: float = 1.0,
         scenario_engine=None,
+        anomaly_monitor=None,
     ):
         self.simulator = simulator
         self.telemetry_service = telemetry_service
         self.interval = interval
         self.scenario_engine = scenario_engine
+        self.anomaly_monitor = anomaly_monitor
         self._running = False
 
     async def run(self) -> None:
@@ -32,11 +35,19 @@ class TelemetryRunner:
             telemetry = self.simulator.step()
 
             if self.scenario_engine is not None:
-                telemetry = self.scenario_engine.apply(
-                    telemetry
-                )
+                telemetry = self.scenario_engine.apply(telemetry)
 
+            # Persist telemetry before running anomaly analysis.
             self.telemetry_service.ingest(telemetry)
+
+            if self.anomaly_monitor is not None:
+                try:
+                    self.anomaly_monitor.process(telemetry)
+                except Exception:
+                    logger.exception(
+                        "Anomaly monitor failed for telemetry type=%s",
+                        type(telemetry).__name__,
+                    )
 
             logger.info(
                 "Telemetry generated: type=%s",

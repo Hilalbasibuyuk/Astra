@@ -1,7 +1,11 @@
+
 import asyncio
 import logging
 
 from database.questdb.connection import create_ilp_sender
+from services.anomaly_detection.telemetry_monitor import (
+    TelemetryAnomalyMonitor,
+)
 from services.telemetry.multi_runner import MultiTelemetryRunner
 from services.telemetry.runner import TelemetryRunner
 from services.telemetry.service import TelemetryService
@@ -24,29 +28,34 @@ async def main():
 
     with create_ilp_sender() as sender:
         telemetry_service = TelemetryService(sender)
+        anomaly_monitor = TelemetryAnomalyMonitor()
 
         telescope_runner = TelemetryRunner(
             simulator=TelescopeSimulator("TCS-01"),
             telemetry_service=telemetry_service,
             interval=1.0,
+            anomaly_monitor=anomaly_monitor,
         )
 
         camera_runner = TelemetryRunner(
             simulator=CameraSimulator("CCD-01"),
             telemetry_service=telemetry_service,
             interval=1.0,
+            anomaly_monitor=anomaly_monitor,
         )
 
         weather_runner = TelemetryRunner(
             simulator=WeatherSimulator("WX-01"),
             telemetry_service=telemetry_service,
             interval=1.0,
+            anomaly_monitor=anomaly_monitor,
         )
 
         dome_runner = TelemetryRunner(
             simulator=DomeSimulator("DOME-01"),
             telemetry_service=telemetry_service,
             interval=1.0,
+            anomaly_monitor=anomaly_monitor,
         )
 
         multi_runner = MultiTelemetryRunner(

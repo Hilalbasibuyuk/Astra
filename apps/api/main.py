@@ -4,6 +4,7 @@ from apps.api.routes.telemetry import router as telemetry_router
 from apps.api.routes.rag import router as rag_router
 from apps.api.routes.rag_answer import router as rag_answer_router
 from apps.api.routes.diagnostics import router as diagnostics_router
+from apps.api.routes.events import router as events_router
 
 app = FastAPI(
     title="ASTRA API",
@@ -13,6 +14,7 @@ app = FastAPI(
 app.include_router(rag_router)
 app.include_router(rag_answer_router)
 app.include_router(diagnostics_router)
+app.include_router(events_router)
 
 @app.get("/api/v1/health")
 async def health_check() -> dict[str, str]:

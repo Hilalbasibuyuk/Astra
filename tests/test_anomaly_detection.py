@@ -143,3 +143,41 @@ def test_rolling_zscore_detects_change_after_constant_baseline():
 
     assert len(results) == len(values)
     assert results[-1] is True
+
+
+def test_rolling_zscore_ignores_small_change_after_constant_baseline():
+    detector = RollingZScoreDetector(
+        window_size=4,
+        threshold=3.0,
+    )
+
+    values = [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.001,
+    ]
+
+    results = detector.detect(values)
+
+    assert results[-1] is False
+
+
+def test_rolling_zscore_detects_large_change_after_constant_baseline():
+    detector = RollingZScoreDetector(
+        window_size=4,
+        threshold=3.0,
+    )
+
+    values = [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.5,
+    ]
+
+    results = detector.detect(values)
+
+    assert results[-1] is True

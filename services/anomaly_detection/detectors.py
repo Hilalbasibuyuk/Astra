@@ -1,5 +1,5 @@
-from collections.abc import Sequence
 
+from collections.abc import Sequence
 import statistics
 
 
@@ -25,14 +25,26 @@ class ZScoreDetector:
             for value in values
         ]
 
+
 class RollingZScoreDetector:
     def __init__(
         self,
         window_size: int = 20,
         threshold: float = 3.0,
+        min_deviation: float = 0.01,
     ):
+        if window_size < 2:
+            raise ValueError("window_size must be at least 2.")
+
+        if threshold <= 0:
+            raise ValueError("threshold must be positive.")
+
+        if min_deviation < 0:
+            raise ValueError("min_deviation cannot be negative.")
+
         self.window_size = window_size
         self.threshold = threshold
+        self.min_deviation = min_deviation
 
     def detect(
         self,
@@ -42,7 +54,6 @@ class RollingZScoreDetector:
 
         for index, value in enumerate(values):
             start = max(0, index - self.window_size)
-
             window = list(values[start:index])
 
             if len(window) < 2:
@@ -53,11 +64,11 @@ class RollingZScoreDetector:
             stdev = statistics.stdev(window)
 
             if stdev == 0:
-                results.append(value != mean)
+                deviation = abs(value - mean)
+                results.append(deviation > self.min_deviation)
                 continue
 
             z_score = abs((value - mean) / stdev)
-
             results.append(z_score > self.threshold)
 
         return results
