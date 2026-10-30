@@ -124,7 +124,9 @@ ASTRA is designed to connect three distinct capabilities: observability through 
 The following diagram represents the main logical flow of the platform.
 
 
+
 flowchart TD
+
     subgraph Frontend["Frontend — React + TypeScript"]
         Dashboard["Overview / Telemetry"]
         DiagnosticsUI["AI Diagnostics"]
