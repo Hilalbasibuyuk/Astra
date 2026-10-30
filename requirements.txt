@@ -1,3 +1,12 @@
+fastapi
+uvicorn[standard]
+pydantic
+
 sentence-transformers
 qdrant-client
 httpx
+
+psycopg[binary]
+
+pytest
+pytest-asyncio
